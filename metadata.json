@@ -1,0 +1,6 @@
+{
+  "name": "Аналитика энергоресурсов и производства",
+  "description": "Система мониторинга, аналитики и графиков энергоресурсов (ТГС, КОС, Котельная, АКЦ) с экспортом отчетов и редактированием данных",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
