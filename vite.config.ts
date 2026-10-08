@@ -5,6 +5,8 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
+    // Electron loads the production bundle through file://, so assets must be relative.
+    base: './',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
