@@ -113,7 +113,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               Система аналитики производства и энергоресурсов
             </h1>
             <p className="text-sm text-slate-300 max-w-2xl mt-1">
-              Комплексный мониторинг выработки кофе (жареный и растворимый), баланса энергоносителей (газ, электроэнергия, водоснабжение, КОС, котельная) с детализацией по цехам и затратам.
+              Комплексный мониторинг выработки кофе (натуральный и растворимый), баланса энергоносителей (газ, электроэнергия, водоснабжение, КОС, котельная) с детализацией по цехам и затратам.
             </p>
           </div>
 
@@ -143,7 +143,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             {((totalRoastedTon + totalInstantTon) / 1000).toFixed(1)}k <span className="text-sm font-semibold text-slate-500">тонн</span>
           </p>
           <div className="flex items-center justify-between text-xs text-slate-500 mt-2 pt-2 border-t border-slate-100">
-            <span>ЖК: <b>{totalRoastedTon.toLocaleString()} т</b></span>
+            <span>НК: <b>{totalRoastedTon.toLocaleString()} т</b></span>
             <span>РК: <b>{totalInstantTon.toLocaleString()} т</b></span>
           </div>
         </div>
@@ -211,7 +211,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               </h2>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              Сопоставление выработки жареного (ЖК), растворимого (РК) кофе, расхода электроэнергии (завод, цеха), газа и воды
+              Сопоставление выработки натурального (НК), растворимого (РК) кофе, расхода электроэнергии (завод, цеха), газа и воды
             </p>
           </div>
           <button

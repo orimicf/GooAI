@@ -13,7 +13,7 @@ export function generateInteractiveChartHtml(
 
   // Default series if none passed
   const seriesConfig = chartConfig?.series || [
-    { key: 'prod_roasted_coffee_ton', label: 'ЖК', color: '#b45309', yAxis: 'left', type: 'bar' },
+    { key: 'prod_roasted_coffee_ton', label: 'НК', color: '#b45309', yAxis: 'left', type: 'bar' },
     { key: 'prod_instant_coffee_ton', label: 'РК', color: '#0284c7', yAxis: 'left', type: 'bar' },
     { key: 'ee_factory_total', label: 'ЭЭ Завод', color: '#16a34a', yAxis: 'right', type: 'line' },
     { key: 'gas_total', label: 'Газ', color: '#e11d48', yAxis: 'right', type: 'line' },
@@ -364,7 +364,7 @@ export function generateInteractiveChartHtml(
         <div class="kpi-sub">Котельная + Обжарка</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-label">Обжаренный кофе (т)</div>
+        <div class="kpi-label">Натуральный кофе (т)</div>
         <div class="kpi-value" id="kpi-roasted">-</div>
         <div class="kpi-sub">Цех обжарки кофе</div>
       </div>
@@ -396,7 +396,7 @@ export function generateInteractiveChartHtml(
           <thead>
             <tr>
               <th>Период</th>
-              <th>Обжаренный кофе (т)</th>
+              <th>Натуральный кофе (т)</th>
               <th>Растворимый кофе (т)</th>
               <th>ЭЭ ТГС (МВт)</th>
               <th>ЭЭ Завод (МВт)</th>

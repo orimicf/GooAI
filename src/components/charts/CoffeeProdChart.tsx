@@ -68,7 +68,7 @@ export const CoffeeProdChart: React.FC<CoffeeProdChartProps> = ({
 
   // Series toggles for toolbar (Clean labels without parens)
   const seriesToggles: SeriesToggleItem[] = [
-    { key: 'roasted', label: 'ЖК', color: '#b45309', active: seriesVisibility.roasted },
+    { key: 'roasted', label: 'НК', color: '#b45309', active: seriesVisibility.roasted },
     { key: 'instant', label: 'РК', color: '#0284c7', active: seriesVisibility.instant },
     { key: 'ee_factory_total', label: 'ЭЭ Завод', color: '#16a34a', active: seriesVisibility.ee_factory_total },
     { key: 'gas_total', label: 'Газ', color: '#ea580c', active: seriesVisibility.gas_total },
@@ -109,7 +109,7 @@ export const CoffeeProdChart: React.FC<CoffeeProdChartProps> = ({
               Производство кофе и потребление энергоресурсов
             </h3>
             <p className="text-xs text-slate-500 mt-0.5">
-              Выпуск продукции (жареный и растворимый кофе) и потребление основных ресурсов (электроэнергия, газ и вода)
+              Выпуск продукции (натуральный и растворимый кофе) и потребление основных ресурсов (электроэнергия, газ и вода)
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -123,7 +123,7 @@ export const CoffeeProdChart: React.FC<CoffeeProdChartProps> = ({
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3">
           <div className="bg-amber-50/90 border border-amber-200 rounded-2xl p-4 shadow-2xs">
             <div className="flex items-center justify-between mb-1">
-              <p className="text-xs text-amber-800 font-bold uppercase tracking-wider">Жареный кофе (ЖК)</p>
+              <p className="text-xs text-amber-800 font-bold uppercase tracking-wider">Натуральный кофе (НК)</p>
               <Coffee className="w-4 h-4 text-amber-700" />
             </div>
             <p className="text-2xl font-black text-amber-950">
@@ -227,7 +227,7 @@ export const CoffeeProdChart: React.FC<CoffeeProdChartProps> = ({
                         <div className="bg-slate-900 text-white text-xs p-3.5 rounded-xl shadow-xl border border-slate-700 space-y-1">
                           <p className="font-bold text-amber-300 text-sm mb-1 pb-1 border-b border-slate-700">{rec.month}</p>
                           <p className="text-amber-300 flex justify-between gap-4">
-                            <span>Жареный кофе (ЖК):</span> <b className="text-white">{rec.prod_roasted_coffee_ton} т</b>
+                            <span>Натуральный кофе (НК):</span> <b className="text-white">{rec.prod_roasted_coffee_ton} т</b>
                           </p>
                           <p className="text-sky-300 flex justify-between gap-4">
                             <span>Растворимый кофе (РК):</span> <b className="text-white">{rec.prod_instant_coffee_ton} т</b>
@@ -260,7 +260,7 @@ export const CoffeeProdChart: React.FC<CoffeeProdChartProps> = ({
                   <Bar 
                     yAxisId="left" 
                     dataKey="prod_roasted_coffee_ton" 
-                    name="ЖК" 
+                    name="НК" 
                     fill="#b45309" 
                     radius={[4, 4, 0, 0]}
                   >

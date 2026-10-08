@@ -558,7 +558,7 @@ export function generateFullDashboardHtml(data: MonthlyRecord[], initialTab: str
           <div class="sub">Технологическое ХВС</div>
         </div>
         <div class="kpi-card">
-          <div class="label">Жареный кофе (ЖК)</div>
+          <div class="label">Натуральный кофе (НК)</div>
           <div class="val" id="ov-roasted">-</div>
           <div class="sub">Выпуск продукции</div>
         </div>
@@ -571,7 +571,7 @@ export function generateFullDashboardHtml(data: MonthlyRecord[], initialTab: str
 
       <div class="card-box">
         <div class="card-title">Динамика энергозатрат и объемов производства</div>
-        <div class="card-subtitle">Сопоставление ежемесячных расходов с выпуском жареного и растворимого кофе</div>
+        <div class="card-subtitle">Сопоставление ежемесячных расходов с выпуском натурального и растворимого кофе</div>
         <div class="series-row" id="overview-series-row"></div>
         <div class="chart-box">
           <canvas id="overviewChart"></canvas>
@@ -583,7 +583,7 @@ export function generateFullDashboardHtml(data: MonthlyRecord[], initialTab: str
     <div id="tab-tgs" class="tab-content" style="display:none;">
       <div class="card-box">
         <div class="card-title">Производство кофе и основные энергоресурсы</div>
-        <div class="card-subtitle">Выпуск продукции (ЖК, РК), электроэнергия завод и цеха ТК/АКТ, потребление газа и воды</div>
+        <div class="card-subtitle">Выпуск продукции (НК, РК), электроэнергия завод и цеха ТК/АКТ, потребление газа и воды</div>
         <div class="series-row" id="tgs-series-row"></div>
         <div class="chart-box">
           <canvas id="tgsChart"></canvas>
@@ -666,7 +666,7 @@ export function generateFullDashboardHtml(data: MonthlyRecord[], initialTab: str
         <div class="card-subtitle">Свободный выбор любых показателей для визуализации</div>
         <div style="margin-bottom:14px; display:flex; gap:10px; flex-wrap:wrap;">
           <select id="builder-metric-1" onchange="renderBuilderChart()" style="padding:6px 10px; border-radius:8px; border:1px solid #cbd5e1; font-weight:600; font-size:12px;">
-            <option value="prod_roasted_coffee_ton">Жареный кофе (ЖК), т</option>
+            <option value="prod_roasted_coffee_ton">Натуральный кофе (НК), т</option>
             <option value="prod_instant_coffee_ton">Растворимый кофе (РК), т</option>
             <option value="gas_total">Газ общий, м³</option>
             <option value="ee_factory_total">ЭЭ Завод общий, МВт/ч</option>
@@ -708,7 +708,7 @@ export function generateFullDashboardHtml(data: MonthlyRecord[], initialTab: str
               <tr>
                 <th>Действия</th>
                 <th>Месяц / Год</th>
-                <th>ЖК (т)</th>
+                <th>НК (т)</th>
                 <th>РК (т)</th>
                 <th>ЭЭ ТГС (МВт)</th>
                 <th>ЭЭ Завод (МВт)</th>
@@ -717,7 +717,6 @@ export function generateFullDashboardHtml(data: MonthlyRecord[], initialTab: str
                 <th>Котлы (м/ч)</th>
                 <th>ХВС завод (м³)</th>
                 <th>КОС сток (м³)</th>
-                <th>Давление (бар)</th>
                 <th>Затраты (руб)</th>
               </tr>
             </thead>
@@ -766,7 +765,7 @@ export function generateFullDashboardHtml(data: MonthlyRecord[], initialTab: str
               </select>
             </div>
             <div class="form-group">
-              <label>Жареный кофе ЖК (тонн)</label>
+              <label>Натуральный кофе НК (тонн)</label>
               <input type="number" step="any" id="formProdRoasted" value="1900" required />
             </div>
             <div class="form-group">
@@ -826,10 +825,6 @@ export function generateFullDashboardHtml(data: MonthlyRecord[], initialTab: str
             <div class="form-group">
               <label>ЭЭ ЦЖ Обжарка (МВт)</label>
               <input type="number" step="any" id="formEeCzh" value="480" />
-            </div>
-            <div class="form-group">
-              <label>Давление (бар)</label>
-              <input type="number" step="any" id="formPressure" value="7.5" />
             </div>
           </div>
         </div>
@@ -911,12 +906,12 @@ export function generateFullDashboardHtml(data: MonthlyRecord[], initialTab: str
     // Series definitions for chips
     const tabSeriesConfigs = {
       overview: [
-        { key: 'roasted', label: 'ЖК', color: '#b45309' },
+        { key: 'roasted', label: 'НК', color: '#b45309' },
         { key: 'instant', label: 'РК', color: '#0284c7' },
         { key: 'cost', label: 'Затраты на ресурсы', color: '#10b981' }
       ],
       tgs: [
-        { key: 'roasted', label: 'ЖК', color: '#b45309' },
+        { key: 'roasted', label: 'НК', color: '#b45309' },
         { key: 'instant', label: 'РК', color: '#0284c7' },
         { key: 'ee_factory', label: 'ЭЭ Завод', color: '#16a34a' },
         { key: 'gas', label: 'Газ', color: '#f97316' },
@@ -1237,7 +1232,7 @@ export function generateFullDashboardHtml(data: MonthlyRecord[], initialTab: str
       if (st.roasted) {
         datasets.push({
           type: 'bar',
-          label: 'ЖК',
+          label: 'НК',
           data: data.map(d => d.prod_roasted_coffee_ton),
           backgroundColor: '#b45309cc',
           yAxisID: 'y',
@@ -1297,7 +1292,7 @@ export function generateFullDashboardHtml(data: MonthlyRecord[], initialTab: str
       const datasets = [];
 
       if (st.roasted) {
-        datasets.push({ type: 'bar', label: 'ЖК', data: data.map(d => d.prod_roasted_coffee_ton), backgroundColor: '#b45309cc', yAxisID: 'y' });
+        datasets.push({ type: 'bar', label: 'НК', data: data.map(d => d.prod_roasted_coffee_ton), backgroundColor: '#b45309cc', yAxisID: 'y' });
       }
       if (st.instant) {
         datasets.push({ type: 'bar', label: 'РК', data: data.map(d => d.prod_instant_coffee_ton), backgroundColor: '#0284c7cc', yAxisID: 'y' });
@@ -1653,7 +1648,6 @@ export function generateFullDashboardHtml(data: MonthlyRecord[], initialTab: str
           '<td>' + (d.boiler_hours || 0) + '</td>' +
           '<td>' + (d.boiler_hvs_factory_total?.toLocaleString('ru-RU') || 0) + '</td>' +
           '<td>' + (d.kos_inflow?.toLocaleString('ru-RU') || 0) + '</td>' +
-          '<td>' + (d.pressure_bar || 0) + '</td>' +
           '<td style="font-weight:600;">' + (d.cost_total_resources ? (d.cost_total_resources / 1000000).toFixed(2) + ' млн' : 0) + '</td>';
         tbody.appendChild(tr);
       });
@@ -1696,7 +1690,6 @@ export function generateFullDashboardHtml(data: MonthlyRecord[], initialTab: str
       document.getElementById('formEeCrk').value = rec.ee_crk || 0;
       document.getElementById('formEeAkc').value = rec.ee_akc || 0;
       document.getElementById('formEeCzh').value = rec.ee_roasting_czh || 0;
-      document.getElementById('formPressure').value = rec.pressure_bar || 0;
       document.getElementById('formKosInflow').value = rec.kos_inflow || 0;
       document.getElementById('formKosDischarge').value = rec.kos_discharge || 0;
       document.getElementById('formKosEe').value = rec.kos_ee || 0;
@@ -1755,7 +1748,7 @@ export function generateFullDashboardHtml(data: MonthlyRecord[], initialTab: str
         hvs_akc_rk: 3.2,
         ee_crk_rk: 0.95,
         hvs_akc: 1200,
-        pressure_bar: Number(document.getElementById('formPressure').value) || 0,
+        pressure_bar: 7.5,
         kos_inflow: Number(document.getElementById('formKosInflow').value) || 0,
         kos_daily_industrial: Math.round(Number(document.getElementById('formKosInflow').value) * 0.9),
         kos_discharge: Number(document.getElementById('formKosDischarge').value) || 0,

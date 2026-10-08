@@ -62,7 +62,7 @@ export const SpecificMetricsChart: React.FC<SpecificMetricsProps> = ({
         ...d,
         // Удельный расход ЭЭ завода на тонну всей продукции (кВт*ч / т)
         specific_ee_factory_kwh_per_ton: Math.round((d.ee_factory_total * 1000) / totalCoffeeTon),
-        // Удельный расход газа цеха жарки на 1 тонну жареного кофе (м3 / т)
+        // Удельный расход газа цеха жарки на 1 тонну натурального кофе (м3 / т)
         specific_gas_roast_m3_per_ton: Number((d.gas_roasting / roastedTon).toFixed(1)),
         // Удельный расход газа котельной на 1 тонну растворимого кофе (м3 / т)
         specific_gas_boiler_m3_per_ton: Number((d.gas_boiler / instantTon).toFixed(1)),

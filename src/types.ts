@@ -54,7 +54,7 @@ export interface MonthlyRecord {
   cost_total_resources: number;     // Общие затраты на ресурсы, руб
 
   // Выпуск продукции
-  prod_roasted_coffee_ton: number;  // Жаренный кофе, тонн (ЖК)
+  prod_roasted_coffee_ton: number;  // Натуральный кофе, тонн (НК)
   prod_instant_coffee_ton: number;  // Растворимый кофе, тонн (РК)
   prod_spray_dry_kg: number;        // SprayDry порошок, кг
 }

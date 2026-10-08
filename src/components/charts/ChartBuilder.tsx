@@ -36,7 +36,7 @@ interface SelectedMetricConfig {
 }
 
 const DEFAULT_METRICS: SelectedMetricConfig[] = [
-  { key: 'prod_roasted_coffee_ton', name: 'ЖК', unit: 'тонн', color: '#b91c1c', chartType: 'spline', yAxisId: 'left', visible: true },
+  { key: 'prod_roasted_coffee_ton', name: 'НК', unit: 'тонн', color: '#b91c1c', chartType: 'spline', yAxisId: 'left', visible: true },
   { key: 'prod_instant_coffee_ton', name: 'РК', unit: 'тонн', color: '#a16207', chartType: 'spline', yAxisId: 'left', visible: true },
   { key: 'ee_tgs', name: 'ТГС', unit: 'МВт/час', color: '#ea580c', chartType: 'spline', yAxisId: 'left', visible: true },
   { key: 'pressure_bar', name: 'Давление', unit: 'бар', color: '#ca8a04', chartType: 'spline', yAxisId: 'right', visible: true },

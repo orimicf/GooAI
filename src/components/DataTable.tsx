@@ -58,12 +58,30 @@ export const DataTable: React.FC<DataTableProps> = ({
     setTimeout(() => setNotification(null), 3000);
   };
 
-  // Filtered rows
+  // Filtered rows in real time by year or month
   const filteredData = useMemo(() => {
+    const rawTerm = searchTerm.trim().toLowerCase();
     return data.filter((row) => {
       const matchYear = selectedYear === 'all' || row.year === selectedYear;
-      const matchSearch = searchTerm === '' || row.month.toLowerCase().includes(searchTerm.toLowerCase());
-      return matchYear && matchSearch;
+      if (!matchYear) return false;
+      if (!rawTerm) return true;
+
+      // Allow multiple tokens, e.g. "2026 сен" or "сентябрь 26"
+      const tokens = rawTerm.split(/\s+/).filter(Boolean);
+
+      const fullMonth = row.month.toLowerCase(); // "сентябрь 2026"
+      const shortMonth = row.monthShort.toLowerCase(); // "сен"
+      const monthRu = MONTH_NAMES[row.monthIndex - 1]?.toLowerCase() || ''; // "сентябрь"
+      const yearStr = String(row.year); // "2026"
+      const yearShort = String(row.year).slice(-2); // "26"
+      const monthIdxStr = String(row.monthIndex); // "9"
+      const monthIdxPadded = String(row.monthIndex).padStart(2, '0'); // "09"
+      const dateIso = `${yearStr}-${monthIdxPadded}`; // "2026-09"
+      const dateDot = `${monthIdxPadded}.${yearStr}`; // "09.2026"
+
+      const searchableHaystack = `${fullMonth} ${shortMonth} ${monthRu} ${yearStr} '${yearShort} ${monthIdxStr} ${monthIdxPadded} ${dateIso} ${dateDot}`;
+
+      return tokens.every((token) => searchableHaystack.includes(token));
     });
   }, [data, selectedYear, searchTerm]);
 
@@ -283,23 +301,34 @@ export const DataTable: React.FC<DataTableProps> = ({
             <span>Внести новые данные</span>
           </button>
 
-          {/* Search Box */}
-          <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+          {/* Search Box by year or month in real-time */}
+          <div className="relative min-w-[260px] flex-1 max-w-sm">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
-              placeholder="Поиск по месяцу..."
+              placeholder="Поиск по году или месяцу (напр. 2026, сен, 09)..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 pr-3 py-1.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-amber-500 w-48"
+              className="w-full pl-9 pr-8 py-2 text-sm bg-slate-50 hover:bg-slate-100/70 focus:bg-white border border-slate-300 focus:border-amber-500 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-amber-500/20 text-slate-800 placeholder:text-slate-400 font-medium transition-all"
+              title="Фильтрация в реальном времени по году (2026, 2025...) или месяцу (сентябрь, сен, 09...)"
             />
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={() => setSearchTerm('')}
+                className="absolute right-2.5 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 rounded-full hover:bg-slate-200 transition-colors"
+                title="Очистить поиск"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
 
           {/* Year Filter */}
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-            className="px-3 py-1.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-amber-500 text-slate-700 font-medium"
+            className="px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-amber-500/20 text-slate-700 font-medium shrink-0"
           >
             <option value="all">Все годы (2021-2026)</option>
             <option value="2026">2026 год</option>
@@ -309,6 +338,15 @@ export const DataTable: React.FC<DataTableProps> = ({
             <option value="2022">2022 год</option>
             <option value="2021">2021 год</option>
           </select>
+
+          {/* Count Badge */}
+          <div className="text-xs font-semibold px-2.5 py-2 bg-slate-100 border border-slate-200 rounded-xl text-slate-600 shrink-0">
+            {filteredData.length === data.length ? (
+              <span>Всего: <b className="text-slate-900">{data.length}</b> записей</span>
+            ) : (
+              <span>Найдено: <b className="text-amber-700">{filteredData.length}</b> из {data.length}</span>
+            )}
+          </div>
         </div>
 
         {/* Import / Export & Reset actions */}
@@ -414,11 +452,10 @@ export const DataTable: React.FC<DataTableProps> = ({
                 {/* Prod & TGS */}
                 {(activeGroup === 'all' || activeGroup === 'prod') && (
                   <>
-                    <th className="p-2.5 bg-amber-50/80 text-amber-900 border-l border-slate-300">ЖК, тонн</th>
+                    <th className="p-2.5 bg-amber-50/80 text-amber-900 border-l border-slate-300">НК, тонн</th>
                     <th className="p-2.5 bg-amber-50/80 text-amber-900">РК, тонн</th>
                     <th className="p-2.5 bg-amber-50/80 text-amber-900">SprayDry, кг</th>
                     <th className="p-2.5 bg-orange-50/80 text-orange-900">ЭЭ ТГС (МВт/ч)</th>
-                    <th className="p-2.5 bg-yellow-50/80 text-yellow-900">Давление (бар)</th>
                   </>
                 )}
 
@@ -454,8 +491,6 @@ export const DataTable: React.FC<DataTableProps> = ({
                     <th className="p-2.5 bg-purple-50/80 text-purple-900">ЭЭ АКЦ (МВт/ч)</th>
                     <th className="p-2.5 bg-sky-50/80 text-sky-900">ХВС для АКЦ (м³)</th>
                     <th className="p-2.5 bg-pink-50/80 text-pink-900">ЭЭ ЦЖ (МВт/ч)</th>
-                    <th className="p-2.5 bg-indigo-50/80 text-indigo-900">ЭЭ АКЦ/РК</th>
-                    <th className="p-2.5 bg-cyan-50/80 text-cyan-900">ХВС АКЦ/РК</th>
                     <th className="p-2.5 bg-indigo-50/80 text-indigo-900">ЭЭ завод всего (МВт/ч)</th>
                   </>
                 )}
@@ -475,8 +510,43 @@ export const DataTable: React.FC<DataTableProps> = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 text-slate-800">
-              {filteredData.map((row) => (
-                <tr key={row.id} className="hover:bg-slate-50/80 transition-colors">
+              {filteredData.length === 0 ? (
+                <tr>
+                  <td colSpan={35} className="text-center py-12 text-slate-500">
+                    <div className="flex flex-col items-center justify-center gap-2">
+                      <Search className="w-8 h-8 text-slate-300" />
+                      <p className="text-sm font-bold text-slate-800">Записи не найдены</p>
+                      <p className="text-xs text-slate-500 max-w-md">
+                        {searchTerm
+                          ? `По запросу «${searchTerm}» ${selectedYear !== 'all' ? `за ${selectedYear} год` : ''} не найдено записей.`
+                          : 'Нет записей для выбранного периода.'}
+                      </p>
+                      <div className="flex gap-2 mt-2">
+                        {searchTerm && (
+                          <button
+                            type="button"
+                            onClick={() => setSearchTerm('')}
+                            className="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-xl text-xs font-semibold transition-colors"
+                          >
+                            Очистить поиск
+                          </button>
+                        )}
+                        {selectedYear !== 'all' && (
+                          <button
+                            type="button"
+                            onClick={() => setSelectedYear('all')}
+                            className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-colors"
+                          >
+                            Показать все годы
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                filteredData.map((row) => (
+                  <tr key={row.id} className="hover:bg-slate-50/80 transition-colors">
                   {/* Month sticky cell */}
                   <td className="p-3 font-bold sticky left-0 bg-white group-hover:bg-slate-50 border-r border-slate-300 text-slate-900">
                     {row.month}
@@ -514,7 +584,6 @@ export const DataTable: React.FC<DataTableProps> = ({
                       <td className="p-2.5 font-bold text-yellow-900">{row.prod_instant_coffee_ton.toLocaleString()}</td>
                       <td className="p-2.5 text-slate-600">{row.prod_spray_dry_kg}</td>
                       <td className="p-2.5 font-bold text-orange-700">{row.ee_tgs}</td>
-                      <td className="p-2.5 font-bold text-yellow-800">{row.pressure_bar}</td>
                     </>
                   )}
 
@@ -550,8 +619,6 @@ export const DataTable: React.FC<DataTableProps> = ({
                       <td className="p-2.5 text-purple-700 font-semibold">{row.ee_akc}</td>
                       <td className="p-2.5 text-slate-700">{row.hvs_akc.toLocaleString()}</td>
                       <td className="p-2.5 text-pink-700 font-semibold">{row.ee_roasting_czh}</td>
-                      <td className="p-2.5 text-slate-600">{row.ee_akc_rk}</td>
-                      <td className="p-2.5 text-slate-600">{row.hvs_akc_rk}</td>
                       <td className="p-2.5 font-bold text-slate-900">{row.ee_factory_total}</td>
                     </>
                   )}
@@ -569,7 +636,7 @@ export const DataTable: React.FC<DataTableProps> = ({
                     </>
                   )}
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>
@@ -624,14 +691,13 @@ export const DataTable: React.FC<DataTableProps> = ({
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">ЖК (Жареный кофе, т)</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">НК (Натуральный кофе, т)</label>
                   <input
                     type="number"
                     step="any"
                     value={editingRecord.prod_roasted_coffee_ton || 0}
                     onChange={(e) => setEditingRecord({ ...editingRecord, prod_roasted_coffee_ton: Number(e.target.value) })}
                     className="w-full bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-bold text-amber-900"
-                    required
                   />
                 </div>
                 <div>
@@ -642,7 +708,6 @@ export const DataTable: React.FC<DataTableProps> = ({
                     value={editingRecord.prod_instant_coffee_ton || 0}
                     onChange={(e) => setEditingRecord({ ...editingRecord, prod_instant_coffee_ton: Number(e.target.value) })}
                     className="w-full bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-bold text-yellow-900"
-                    required
                   />
                 </div>
               </div>
@@ -661,16 +726,6 @@ export const DataTable: React.FC<DataTableProps> = ({
                       value={editingRecord.ee_tgs || 0}
                       onChange={(e) => setEditingRecord({ ...editingRecord, ee_tgs: Number(e.target.value) })}
                       className="w-full bg-slate-50 border border-slate-300 rounded p-1.5 font-bold text-orange-700"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-slate-600 block mb-1">Давление (бар)</label>
-                    <input
-                      type="number"
-                      step="any"
-                      value={editingRecord.pressure_bar || 0}
-                      onChange={(e) => setEditingRecord({ ...editingRecord, pressure_bar: Number(e.target.value) })}
-                      className="w-full bg-slate-50 border border-slate-300 rounded p-1.5 font-bold text-yellow-700"
                     />
                   </div>
                   <div>
@@ -731,36 +786,6 @@ export const DataTable: React.FC<DataTableProps> = ({
                       value={editingRecord.prod_spray_dry_kg || 0}
                       onChange={(e) => setEditingRecord({ ...editingRecord, prod_spray_dry_kg: Number(e.target.value) })}
                       className="w-full bg-slate-50 border border-slate-300 rounded p-1.5 font-medium"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-slate-600 block mb-1">ЭЭ АКЦ/РК</label>
-                    <input
-                      type="number"
-                      step="any"
-                      value={editingRecord.ee_akc_rk || 0}
-                      onChange={(e) => setEditingRecord({ ...editingRecord, ee_akc_rk: Number(e.target.value) })}
-                      className="w-full bg-slate-50 border border-slate-300 rounded p-1.5 font-medium text-slate-700"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-slate-600 block mb-1">ХВС АКЦ/РК</label>
-                    <input
-                      type="number"
-                      step="any"
-                      value={editingRecord.hvs_akc_rk || 0}
-                      onChange={(e) => setEditingRecord({ ...editingRecord, hvs_akc_rk: Number(e.target.value) })}
-                      className="w-full bg-slate-50 border border-slate-300 rounded p-1.5 font-medium text-slate-700"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-slate-600 block mb-1">ЭЭ ЦРК/РК</label>
-                    <input
-                      type="number"
-                      step="any"
-                      value={editingRecord.ee_crk_rk || 0}
-                      onChange={(e) => setEditingRecord({ ...editingRecord, ee_crk_rk: Number(e.target.value) })}
-                      className="w-full bg-slate-50 border border-slate-300 rounded p-1.5 font-medium text-slate-700"
                     />
                   </div>
                 </div>

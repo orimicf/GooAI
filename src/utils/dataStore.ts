@@ -2,11 +2,18 @@ import { useState, useEffect } from 'react';
 import { MonthlyRecord } from '../types';
 import { INITIAL_DATA } from '../data/initialData';
 
-const STORAGE_KEY = 'factory_energy_data_v1';
+const STORAGE_KEY = 'factory_energy_data_v2';
+const OLD_STORAGE_KEY = 'factory_energy_data_v1';
 
 export function loadStoredData(): MonthlyRecord[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    let raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      raw = localStorage.getItem(OLD_STORAGE_KEY);
+      if (raw) {
+        try { localStorage.removeItem(OLD_STORAGE_KEY); } catch {}
+      }
+    }
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.length > 0) {

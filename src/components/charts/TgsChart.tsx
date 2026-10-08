@@ -44,7 +44,7 @@ export const TgsChart: React.FC<TgsChartProps> = ({
 
   // Series toggles for toolbar
   const seriesToggles: SeriesToggleItem[] = [
-    { key: 'roasted', label: 'ЖК', color: '#b91c1c', active: activeSeries.roasted },
+    { key: 'roasted', label: 'НК', color: '#b91c1c', active: activeSeries.roasted },
     { key: 'instant', label: 'РК', color: '#a16207', active: activeSeries.instant },
     { key: 'ee_tgs', label: 'ТГС', color: '#ea580c', active: activeSeries.ee_tgs },
     { key: 'pressure', label: 'Давление', color: '#ca8a04', active: activeSeries.pressure },
@@ -197,7 +197,7 @@ export const TgsChart: React.FC<TgsChartProps> = ({
               Производственные показатели: Выпуск кофе и ресурсы
             </h3>
             <p className="text-xs text-slate-500 mt-0.5">
-              Сопоставление выработки жареного и растворимого кофе, электроэнергии и давления
+              Сопоставление выработки натурального и растворимого кофе, электроэнергии и давления
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -210,7 +210,7 @@ export const TgsChart: React.FC<TgsChartProps> = ({
         {/* KPI Summary Tiles */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div className="bg-red-50/90 border border-red-200 rounded-2xl p-4 shadow-2xs">
-            <p className="text-xs text-red-700 font-bold uppercase tracking-wider">Жареный кофе</p>
+            <p className="text-xs text-red-700 font-bold uppercase tracking-wider">Натуральный кофе</p>
             <p className="text-2xl font-black text-red-950 mt-1">
               {totalRoasted.toLocaleString()} <span className="text-sm font-semibold text-red-700">тонн</span>
             </p>
@@ -259,7 +259,7 @@ export const TgsChart: React.FC<TgsChartProps> = ({
           <span className="font-bold text-slate-500 uppercase tracking-wider text-[11px]">Легенда:</span>
           <div className="flex items-center gap-1.5">
             <span className="w-3.5 h-3.5 rounded-full bg-[#b91c1c] border-2 border-white shadow-xs"></span>
-            <span className="font-bold text-slate-800">ЖК</span>
+            <span className="font-bold text-slate-800">НК</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-3.5 h-3.5 rounded-full bg-[#a16207] border-2 border-white shadow-xs"></span>
@@ -532,7 +532,7 @@ export const TgsChart: React.FC<TgsChartProps> = ({
             </p>
             <div className="space-y-1">
               <p className="text-red-300 flex justify-between">
-                <span>Жареный кофе (ЖК):</span> <b className="text-white">{hoveredPoint.record.prod_roasted_coffee_ton} т</b>
+                <span>Натуральный кофе (НК):</span> <b className="text-white">{hoveredPoint.record.prod_roasted_coffee_ton} т</b>
               </p>
               <p className="text-yellow-300 flex justify-between">
                 <span>Растворимый (РК):</span> <b className="text-white">{hoveredPoint.record.prod_instant_coffee_ton} т</b>
